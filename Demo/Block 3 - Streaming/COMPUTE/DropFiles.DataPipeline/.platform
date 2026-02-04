@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "DropFiles"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "b774bdb2-c6bf-ac7c-40b0-9ab2702cfe47"
+  }
+}

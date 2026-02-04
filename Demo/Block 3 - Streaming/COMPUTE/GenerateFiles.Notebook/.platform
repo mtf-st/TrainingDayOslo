@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "GenerateFiles"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "994653f6-79a6-ba02-4e54-169ebf9d1290"
+  }
+}

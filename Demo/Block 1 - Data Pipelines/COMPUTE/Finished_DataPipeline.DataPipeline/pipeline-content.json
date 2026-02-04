@@ -1,0 +1,142 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "items": {
+            "value": "@activity('Get all tables and schemas').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "AzureSqlSource",
+                  "partitionOption": "None",
+                  "queryTimeout": "02:00:00",
+                  "datasetSettings": {
+                    "type": "AzureSqlTable",
+                    "typeProperties": {
+                      "schema": {
+                        "value": "@item().schema_name",
+                        "type": "Expression"
+                      },
+                      "table": {
+                        "value": "@item().table_name",
+                        "type": "Expression"
+                      },
+                      "database": "aworks"
+                    },
+                    "schema": [],
+                    "externalReferences": {
+                      "connection": "555e8249-d5aa-4e0a-9fdd-4f4182ff4809"
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "ParquetSink",
+                  "formatSettings": {
+                    "type": "ParquetWriteSettings",
+                    "enableVertiParquet": true
+                  },
+                  "storeSettings": {
+                    "type": "LakehouseWriteSettings"
+                  },
+                  "datasetSettings": {
+                    "type": "Parquet",
+                    "typeProperties": {
+                      "location": {
+                        "type": "LakehouseLocation",
+                        "folderPath": {
+                          "value": "@concat('AzureSQLDB/',item().schema_name,'/', item().table_name,'/',string(formatDateTime(utcNow(),'yyyy/MM/dd/HH/mm')),'/')",
+                          "type": "Expression"
+                        }
+                      },
+                      "compressionCodec": "snappy"
+                    },
+                    "schema": [],
+                    "linkedService": {
+                      "name": "LANDINGZONE",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "bd7c269c-cbbb-8525-4361-cb01b5531d4b",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Files"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                },
+                "enableStaging": false
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "GetSQLTable",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "Loop All SQL Tables",
+        "dependsOn": [
+          {
+            "activity": "Get all tables and schemas",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "AzureSqlSource",
+            "sqlReaderQuery": "SELECT\n    s.name  AS schema_name,\n    t.name  AS table_name\nFROM sys.tables t\nJOIN sys.schemas s\n    ON t.schema_id = s.schema_id",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
+          },
+          "datasetSettings": {
+            "type": "AzureSqlTable",
+            "typeProperties": {
+              "database": "aworks"
+            },
+            "schema": [],
+            "externalReferences": {
+              "connection": "555e8249-d5aa-4e0a-9fdd-4f4182ff4809"
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Get all tables and schemas",
+        "dependsOn": []
+      }
+    ]
+  }
+}

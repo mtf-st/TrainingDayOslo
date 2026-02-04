@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "KQLDatabase",
+    "displayName": "Windmills",
+    "description": "Windmills"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "ae5bd185-cde8-9eac-48d1-907e9c05a1b0"
+  }
+}

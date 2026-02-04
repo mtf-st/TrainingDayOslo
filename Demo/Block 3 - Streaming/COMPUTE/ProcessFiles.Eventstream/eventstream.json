@@ -1,0 +1,96 @@
+{
+  "sources": [
+    {
+      "id": "9ad98fc1-c268-4594-88b6-b9976213dc20",
+      "name": "new-source",
+      "type": "FabricOneLakeEvents",
+      "properties": {
+        "tenantId": "658295dc-c573-4f6f-b5ff-e3665f828b9e",
+        "workspaceId": "31d9702e-629f-44e9-b1cf-b4dc9fa73122",
+        "itemId": "f6e75393-5b7d-453f-ba29-f4b3dc2df25c",
+        "oneLakePaths": [
+          "/Files/windmill_events"
+        ],
+        "includedEventTypes": [
+          "Microsoft.Fabric.OneLake.FileCreated",
+          "Microsoft.Fabric.OneLake.FileRenamed",
+          "Microsoft.Fabric.OneLake.FolderCreated",
+          "Microsoft.Fabric.OneLake.FolderDeleted",
+          "Microsoft.Fabric.OneLake.FolderRenamed",
+          "Microsoft.Fabric.OneLake.FileDeleted"
+        ],
+        "filters": []
+      }
+    }
+  ],
+  "destinations": [
+    {
+      "id": "37619f6a-287c-403e-b29a-f11220dc8593",
+      "name": "Eventhouse",
+      "type": "Eventhouse",
+      "properties": {
+        "dataIngestionMode": "ProcessedIngestion",
+        "workspaceId": "00000000-0000-0000-0000-000000000000",
+        "itemId": "ae5bd185-cde8-9eac-48d1-907e9c05a1b0",
+        "databaseName": "Windmills",
+        "tableName": "windmills",
+        "inputSerialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8"
+          }
+        }
+      },
+      "inputNodes": [
+        {
+          "name": "SqlCode"
+        }
+      ],
+      "inputSchemas": [
+        {
+          "name": "SqlCode",
+          "schema": {
+            "columns": []
+          }
+        }
+      ]
+    }
+  ],
+  "streams": [
+    {
+      "id": "13a80f75-35ed-4b7c-9424-048430052bde",
+      "name": "ProcessFiles-stream",
+      "type": "DefaultStream",
+      "properties": {},
+      "inputNodes": [
+        {
+          "name": "new-source"
+        }
+      ]
+    }
+  ],
+  "operators": [
+    {
+      "name": "SqlCode",
+      "type": "SQL",
+      "inputNodes": [
+        {
+          "name": "ProcessFiles-stream"
+        }
+      ],
+      "properties": {
+        "query": "SELECT\n    CAST(timestamp AS datetime)            AS event_time,\n    event_id,\n    windfarm_id,\n    windfarm_name,\n    latitude,\n    longitude,\n    wind_speed_mps,\n    power_mw,\n\n    -- Derived metrics\n    CASE \n        WHEN wind_speed_mps > 0 \n        THEN power_mw / wind_speed_mps \n        ELSE NULL \n    END                                    AS efficiency,\n\n    -- Operational status\n    CASE\n        WHEN power_mw < 1.0 AND wind_speed_mps > 8.0 THEN 'LOW_POWER'\n        WHEN wind_speed_mps > 18.0                  THEN 'HIGH_WIND'\n        ELSE 'OK'\n    END                                    AS status\n\nINTO [Eventhouse]\nFROM [ProcessFiles-stream]\n",
+        "advancedSettings": null
+      },
+      "inputSchemas": [
+        {
+          "name": "ProcessFiles-stream",
+          "schema": {
+            "columns": []
+          }
+        }
+      ]
+    }
+  ],
+  "compatibilityLevel": "1.1"
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "BuildStarSchema"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a374a1ff-80e8-b694-4950-9d7c6bf9d03f"
+  }
+}
