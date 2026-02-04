@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "DeltaDemo"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "7be4a771-9866-bc62-4951-c4eb47a2db45"
+  }
+}

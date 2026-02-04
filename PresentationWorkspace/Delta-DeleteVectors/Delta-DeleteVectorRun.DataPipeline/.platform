@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Delta-DeleteVectorRun"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "3eb748b3-0963-b91e-4ac6-06945eaf1492"
+  }
+}

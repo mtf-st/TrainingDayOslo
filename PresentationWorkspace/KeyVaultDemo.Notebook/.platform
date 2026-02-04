@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "KeyVaultDemo"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "71a2af4a-319b-ab1a-4867-354924c73f07"
+  }
+}
